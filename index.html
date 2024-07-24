@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pedido - Hamburgueria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        h1 {
+            color: #ff5722;
+            margin: 20px 0;
+            font-size: 2em;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            margin: 10px;
+            padding: 15px;
+            text-align: center;
+            background: linear-gradient(145deg, #333, #222);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 12px;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 1.4em;
+            color: #ff5722;
+        }
+
+        .card p {
+            margin: 5px 0;
+            color: #b0b0b0;
+        }
+
+        .card button {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #e64a19;
+            transform: scale(1.05);
+        }
+
+        #produtosPedido {
+            margin-top: 20px;
+        }
+
+        .produtoPedido {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: #fff;
+        }
+
+        .produtoPedido button {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+        }
+
+        .produtoPedido button:hover {
+            background-color: #e64a19;
+        }
+
+        #totalPedido {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #ff5722;
+        }
+
+        #gerarPedido {
+            background-color: #ff5722;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #gerarPedido:hover {
+            background-color: #e64a19;
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            color: #e0e0e0;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-content input,
+        .modal-content label {
+            margin: 10px 0;
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #222;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .modal-content input[type="radio"],
+        .modal-content input[type="checkbox"] {
+            margin: 0 10px 0 0;
+        }
+
+        .modal-content button {
+            margin: 10px 5px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .modal-content #confirmarPedido {
+            background-color: #ff5722;
+            color: #fff;
+        }
+
+        .modal-content #confirmarPedido:hover {
+            background-color: #e64a19;
+            transform: scale(1.05);
+        }
+
+        .modal-content #cancelarPedido {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .modal-content #cancelarPedido:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        .modal-content #mensagem {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .modal-content .option-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0;
+        }
+
+        .modal-content .option-group label {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        .modal-content .option-group i {
+            margin-right: 10px;
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="lo.png" alt="Logo da Hamburgueria" class="logo">
+        <h1>Cardápio da Hamburgueria</h1>
+        <div id="produtos"></div>
+        <div id="produtosPedido"></div>
+        <div id="totalPedido">Total do Pedido: R$ 0.00</div>
+        <button id="gerarPedido"><i class="fas fa-check"></i> Finalizar Pedido</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirme Seu Pedido</h2>
+            <div id="mensagem">
+                <div class="option-group">
+                    <label>
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="radio" name="pagamento" value="Dinheiro" checked> Dinheiro
+                    </label>
+                    <label>
+                        <i class="fas fa-credit-card"></i>
+                        <input type="radio" name="pagamento" value="Cartão"> </bt>Cartão
+                    </label>
+                    <label>
+                        <i class="fas fa-mobile-alt"></i>
+                        <input type="radio" name="pagamento" value="Pix"> <br>Pix
+                    </label>
+                </div>
+                
+                <div class="option-group">
+                    <label>
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <input type="checkbox" id="troco"> Precisa <br>de troco?
+                    </label>
+                    <label>
+                        <i class="fas fa-truck"></i>
+                        <input type="checkbox" id="incluirTaxa"> Incluir Taxa<br> de Entrega (R$ 2,00)
+                    </label>
+                </div>
+            </div>
+            <input type="text" id="nomeCliente" placeholder="Seu Nome">
+<input type="text" id="enderecoCliente" placeholder="Seu Endereço">
+            <input type="text" id="telefoneCliente" placeholder="Seu Telefone (incluindo +55 DDD)">
+            <button id="confirmarPedido"><i class="fas fa-check"></i> Confirmar Pedido</button>
+            <button id="cancelarPedido"><i class="fas fa-times"></i> Cancelar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
